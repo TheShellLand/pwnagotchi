@@ -1,0 +1,22 @@
+FROM python:3
+
+
+# install pwnagotchi
+COPY . /opt/pwnagotchi
+RUN apt update && \
+    apt install -y curl vim wget unzip && \
+    cd /opt && \
+    wget "https://github.com/evilsocket/pwnagotchi/archive/v1.4.3.zip" && \
+    unzip v1.4.3.zip && \
+    cd pwnagotchi-1.4.3 && \
+    python3 -m pip install --only-binary=true -r requirements.txt && \
+    python3 -m pip install .
+
+#     python3 -m pip install --break-system-packages --root-user-action=ignore -r requirements.txt
+#     python3 -m pip install . --root-user-action && \
+#     apt clean && \
+#     rm -rf /var/lib/apt/lists/\* /tmp/\* /var/tmp/*
+
+COPY docker/entry.sh /entry.sh
+
+ENTRYPOINT ["/bin/bash", "/entry.sh"]
